@@ -24,7 +24,6 @@ namespace ConsoleGame
     }
     class BattleshipGame
     {
-        // TODO: Link to settings somehow but with default 10 max 25
         static int SEA_SIZE = 10; // for the GameBoard class
         static int GAME_VERSION = 2002; // for the GameBoard class
         static int MAX_TURNS = 100;
@@ -71,8 +70,7 @@ namespace ConsoleGame
             DisplaySplashScreen();
             Console.WriteLine(@"
             1. START
-            2. SETTINGS
-            3. QUIT");
+            2. QUIT");
 
             string? input = Console.ReadLine();
             
@@ -83,11 +81,6 @@ namespace ConsoleGame
                     StartGame();
                     break;
                 case "2":
-                case "settings":
-                    SettingsMenu();
-                    MainMenu(); // remove this once you have the settings menu implemented.
-                    break;
-                case "3":
                 case "quit":
                     QuitGame();
                     break;
@@ -104,7 +97,6 @@ namespace ConsoleGame
         {
             Console.WriteLine("Starting BattleShip!");
 
-            // create instances of the game board for the player and the enemy
             GameBoard playerGameBoard = new GameBoard(SEA_SIZE);
             GameBoard enemyGameBoard = new GameBoard(SEA_SIZE);
 
@@ -113,21 +105,13 @@ namespace ConsoleGame
             Dictionary<int, string> seaMappings = GameBoard.MakeSeaMappings();
             Dictionary<int, char> coordinates = GameBoard.MakeGameBoard(SEA_SIZE);
 
-            // find a way to handle startgame > back > startGame from going into the game loop twice
-            // todo would be outputted twice
+            // Game process
             ShipPlacementMenu(playerGameBoard, enemyGameBoard, ships, seaMappings, coordinates);
 
             GameLoopMenu(playerGameBoard, enemyGameBoard, ships, seaMappings, coordinates);
             GameLoop(playerGameBoard, enemyGameBoard, ships, seaMappings, coordinates);
             
             QuitGame();
-        }
-        /// <summary>
-        /// TODO: Implement the settings menu for the game.
-        /// </summary>
-        private void SettingsMenu()
-        {
-            Console.WriteLine("TODO"); // TODO: method for settings menu here
         }
         /// <summary>
         /// A simple method allowing the program to terminate where it is called.
@@ -190,11 +174,10 @@ namespace ConsoleGame
                                    Dictionary<int, char> coordinates,
                                    string placementType="random")
         {
-            // Reset the seas for both the player and the enemy (necessary when re-doing the placement)
+            // Reset the seas for both the player and the enemy (for re-doing the placement)
             enemyGameBoard.ResetSea();
             playerGameBoard.ResetSea();
 
-            // Create the enemy and player sea with navy
             enemyGameBoard.SeaArray = enemyGameBoard.PlaceShips(enemyGameBoard.SeaArray,ships, seaMappings,coordinates,"random");
             playerGameBoard.SeaArray = playerGameBoard.PlaceShips(playerGameBoard.SeaArray, ships, seaMappings,coordinates, placementType);
             
@@ -255,8 +238,7 @@ namespace ConsoleGame
             Console.WriteLine(@"Congratulations for choosing your navy! Let the battle begin!
             1. START BATTLE
             2. REDO SHIP PLACEMENT
-            3. SETTINGS
-            4. QUIT");
+            3. QUIT");
 
             string? input = Console.ReadLine();
 
@@ -274,12 +256,6 @@ namespace ConsoleGame
                     break;
                 case "3":
                 case "3.":
-                case "settings":
-                    SettingsMenu();
-                    GameLoopMenu(playerGameBoard, enemyGameBoard, ships, seaMappings, coordinates);
-                    break;
-                case "4":
-                case "4.":
                 case "quit":
                     QuitGame();
                     break;
@@ -329,14 +305,13 @@ namespace ConsoleGame
                 // Enemy turn
                 Console.WriteLine("The Enemy will now make its move");
 
-                // Generate random row index (no placing back)
+                // no placing back the same coordinates
                 do
                 {
                     row = rand.Next(0, coordinates.Count);
                 } while (rowIndices.Contains(row));
                 rowIndices.Add(row);
                 
-                // Generate random column index (no placing back)
                 do
                 {
                     col = rand.Next(0, coordinates.Count);
@@ -348,7 +323,6 @@ namespace ConsoleGame
                 success = EvaluateTarget(playerGameBoard, targetCoordinate);
                 enemyHits += success ? 1 : 0;
 
-                // Check the game progress
                 if (EndGame(playerHits, enemyHits, maxHits)) 
                 {
                     break;

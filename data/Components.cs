@@ -49,7 +49,7 @@ namespace ConsoleGame.Components
             {
                 for (int j = 0; j < sea.GetLength(1); j++)
                 {
-                    sea[i, j] = 0; // Assuming 0 represents an empty space
+                    sea[i, j] = 0; // 0 for waves
                 }
             }
         }
@@ -66,13 +66,11 @@ namespace ConsoleGame.Components
                                          Dictionary<int, char> coordinates, 
                                          string view = "all")
         {
-            // Check if the view parameter is valid
             if (!(view == "all" || view == "waves" || view == "tracking" || view == "debug"))
             {
                 throw new ArgumentException($"Invalid parameter as view: {view}. Please choose from: waves, tracking, all, debug.");
             }
             
-            // First print the letter coordinates for the sea
             Console.Write("    ");
             for (int i = 0; i < sea.GetLength(0); i++)
             {
@@ -80,7 +78,6 @@ namespace ConsoleGame.Components
             }
             Console.WriteLine();
 
-            // Output the Sea to the command line
             for (int i = 0; i < sea.GetLength(0); i++)
             {
                 Console.Write($"[{i+1,2}]");
@@ -142,14 +139,11 @@ namespace ConsoleGame.Components
                     
                     while (true)
                     {
-                        // Generate ship positions and direction
                         int row = rand.Next(0, coordinates.Count);
                         int col = rand.Next(0, coordinates.Count);
                         Tuple<int, int> position = Tuple.Create(row, col);
                         char direction = directions[rand.Next(0, 4)];
                         
-                        // This will check if the ship positions are valid
-                        // TODO: here you can implement ship designs such as [-][-][>] instead of [O][O][O]
                         (seaUpdate, success) = CheckAndPlaceShips(seaUpdate, position, direction, ship.Value, ship.Key);
                     
                         if (success)
@@ -175,12 +169,10 @@ namespace ConsoleGame.Components
                     
                     while (!success)
                     {
-                        // Prompt user for ship position and direction
                         ViewSea(seaUpdate, mappings, coordinates, "all");
                         Console.WriteLine($"Please give the position the direction of your \x1b[32m{ship.Key}\x1b[0m starting from the stern.");
                         for (int i = 0; i < ship.Value; i++) {Console.Write("\x1b[32m[O]\x1b[0m");}
                         Console.WriteLine($"\nNote: you cannot place ships next to each other and on the edges. Length of {ship.Value})!");
-                        Console.WriteLine("TODO: If you wish to exit the custom placement, type 'exit'.");
 
                         string? input = Console.ReadLine();
 
@@ -192,7 +184,6 @@ namespace ConsoleGame.Components
                             Tuple<int, int> position = Tuple.Create(row, col);
                             char direction = input[2];
                             
-                            // Check if ship can be placed at the specified position and direction
                             (seaUpdate, success) = CheckAndPlaceShips(seaUpdate, position, direction, ship.Value, ship.Key);
                             
                             if (success)
@@ -268,13 +259,11 @@ namespace ConsoleGame.Components
                     colOffset = 1;
                     break;
             }
-            // Go over the ship positions
             for (int i = 0; i < shipLength; i++)
             {
                 int newRow = row + rowOffset * i;
                 int newCol = col + colOffset * i;
 
-                // And check if the current cell is occupied or adjacent to an occupied cell (collsion)
                 for (int r = newRow - 1; r <= newRow + 1; r++)
                 {
                     for (int c = newCol - 1; c <= newCol + 1; c++)
@@ -292,7 +281,6 @@ namespace ConsoleGame.Components
                 int newRow = row + rowOffset * i;
                 int newCol = col + colOffset * i;
                 
-                // different ID per ship so you can keep track when they are sunk
                 switch(shipName)
                 {
                     case "Carrier":
@@ -343,11 +331,10 @@ namespace ConsoleGame.Components
         /// </summary>
         /// <param name="gameVersion">Integer, specifies the version of Battleship. 2 options:
         /// the 1990 Milton Bradley version or the 2002 Hasbro version</param>
-        /// <param name="customShips">TODO: here you should be able to edit and add ships as you wish.</param>
         /// <returns>A dictionary containing all the ships for your navy during the game. 
         /// keys the ship names (string) and values their size (integer)</returns>
         /// <exception cref="ArgumentException">Give a correct game version (1990 or 2002)</exception>
-        public static Dictionary<string, int> MakeShipAssets(int gameVersion=2002, bool customShips=false)
+        public static Dictionary<string, int> MakeShipAssets(int gameVersion=2002)
         {
             Dictionary<string, int> ships = new Dictionary<string, int>();
             switch (gameVersion)
@@ -375,20 +362,14 @@ namespace ConsoleGame.Components
                 default:
                     throw new ArgumentException("Invalid game version.");
             }
-            if (customShips)
-            {
-                Console.WriteLine("TODO: way to add and change ships");
-            }
             return ships;
         }
         /// <summary>
         /// Loads the mappings that will be used to generate the sea during the game.
         /// </summary>
-        /// <param name="customSeaMappings">TODO: here you should be able to edit and add sea/terrain as you wish</param>
         /// <returns>A dictionary containing the mappings from integers (keys) to the terrain type strings (values)</returns>
-        public static Dictionary<int, string> MakeSeaMappings(bool customSeaMappings=false)
+        public static Dictionary<int, string> MakeSeaMappings()
         {
-            // different values per ship so you can keep track when they are sunk
             Dictionary<int, string> seaMappings = new Dictionary<int,string>
             {
                 {0, "\x1b[34m[~]\x1b[0m"}, // Waves/unknown (blue)
@@ -401,21 +382,14 @@ namespace ConsoleGame.Components
                 {7, "\x1b[32m[O]\x1b[0m"}, // Patrol Boat intact (green)
                 {8, "\x1b[32m[O]\x1b[0m"}  // cruiser intact (green)
             };
-
-            if (customSeaMappings)
-            {
-                Console.WriteLine("TODO: way to add and change the sea/terrain and how it behaves");
-            }
             return seaMappings;
         }
         /// <summary>
-        /// a method to link the ship ID to the ship name
+        /// A method to link the ship ID to the ship name
         /// </summary>
-        /// <param name="customShipMappings">TODO: here you should be able to edit and add ships as you wish</param>
         /// <returns>A dictionary containing the mappings from integers (keys) to the ship names (values)</returns>
-        public static Dictionary<int, string> MakeShipMappings(bool customShipMappings=false)
+        public static Dictionary<int, string> MakeShipMappings()
         {
-            // different values per ship so you can keep track when they are sunk
             Dictionary<int, string> shipMappings = new Dictionary<int,string>
             {
                 {3, "Carrier"},
@@ -425,11 +399,6 @@ namespace ConsoleGame.Components
                 {7, "Patrol Boat"},
                 {8, "Cruiser"}
             };
-
-            if (customShipMappings)
-            {
-                Console.WriteLine("TODO: way to add and change the sea/terrain and how it behaves");
-            }
             return shipMappings;
         }
         /// <summary>
