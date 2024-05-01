@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "JPb+LSfdxURjXjZVvdlZt5R+joP6K2rs+DNEkGFA19sono1vYFOArE3+Ps4qW6nmVz3JRAjR4b9pdDRTdpdcMQ==",
+  "dgSpecHash": "aWzOiZrsGHryLj857PBv4dtHbLtDJwY5xh0YySq+PJL0Ke/072IEwpIcl6VUGlgy/o2GeUCUX9O+b5sNGO+9oQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\piete\\OneDrive - JKU\\OneDrive - Johannes Kepler Universität Linz\\MSc in AI - JKU\\Courses\\ST - C#\\Project\\BattleshipGame\\BattleshipGame.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\piete\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\7.0.11\\microsoft.netcore.app.runtime.win-x64.7.0.11.nupkg.sha512",
+    "C:\\Users\\piete\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\7.0.11\\microsoft.windowsdesktop.app.runtime.win-x64.7.0.11.nupkg.sha512",
+    "C:\\Users\\piete\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\7.0.11\\microsoft.aspnetcore.app.runtime.win-x64.7.0.11.nupkg.sha512"
+  ],
   "logs": []
 }
